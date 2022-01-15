@@ -16,35 +16,56 @@ print("play")
 stream.write(samples.astype(np.float32).tostring()) 
 stream.close()
 
-# #設定
-# beat = st.slider('拍子', 1, 10, 4)
-# BPM = st.slider('BPM', 1, 200, 120)
-# scale = 0 #音の高さ
-# duration = 150
-# cycle = st.slider('繰り返し数', 1, 10, 2)
+#設定
+beat = st.slider('拍子', 1, 10, 4)
+BPM = 240
+duration = 60/BPM
+duration = 150
+cycle = st.slider('繰り返し数', 1, 10, 2)
 
 
-# run_button = st.button('run')
-# stop_button = st.button('stop')
+run_button = st.button('run')
+stop_button = st.button('stop')
+
+import pygame.midi
+import random
+
+def tone1(out, n1, vol1 ): 
+    out.note_on( n1[0]+oct1*12, vol1 )
+    time.sleep( n1[1] ) 
+    out.note_off( n1[0]+oct1*12, vol1 )
+    for _ in range(3):
+        out.note_on( 50, vol1 )
+        time.sleep( 0.1 ) 
+        out.note_off( 50, vol1 )
+        time.sleep( n1[1]-0.1 ) 
 
 
-# tone_d = scale - 9
-# beep = int(440*2**(tone_d/12)) #周波数
-# sleep_time = (60/BPM) - (duration/1000)
-# major = [0,2,4,5,7,9,11,12]
-# scales = []
-# for interval in major:
-#     tone_d = scale - 9 + interval
-#     freq = int(440*2**(tone_d/12))
-#     scales.append(freq)
-# scales *= cycle
 
-# if run_button:
-#     for freq in scales:
-#         if stop_button:
-#             sys.exit()
-#         winsound.Beep(2*freq,int(duration))
-#         time.sleep(sleep_time)
-#         for _ in range(beat-1):
-#             winsound.Beep(beep,int(duration))
-#             time.sleep(sleep_time)
+a1 = [[60, duration], [62, duration], [64, duration], [65, duration], [67, duration], [69, duration], [71, duration], [72, duration]]     # C, D, E, F, G, A, B, C 
+random.shuffle(a1)
+
+vol1 = 127 
+oct1 = 0 
+chn1 = 0
+ins1 = 30
+ins2 = 18
+
+pygame.midi.init()
+out = pygame.midi.Output(0)
+out.set_instrument(ins1, chn1)
+
+# pygame.midi.init()
+# out2 = pygame.midi.Output(1)
+# out2.set_instrument(ins2, 1)
+
+
+for n1 in a1:
+    tone1(out, n1, vol1 ) 
+    # for _ in range(3):
+    #     tone1(out2, n1, vol1 ) 
+
+out.close()
+# out2.close()
+
+pygame.midi.quit()
