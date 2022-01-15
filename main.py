@@ -41,7 +41,7 @@ ins1 = 30
 ins2 = 18
 
 pygame.midi.init()
-out = pygame.midi.Output(0)
+out = pygame.midi.Output(0,0)
 out.set_instrument(ins1, chn1)
 
 # pygame.midi.init()
